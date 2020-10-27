@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="cb65842e-ca00-4f77-a407-b93587530237" >
+		<db:my-sql-connection host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" database="${db.database}" />
+	</db:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="0f84f2d8-15c3-445e-bc2e-df446504a74f" file="config\app-prod.properties" />
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="486df3a1-dbab-4477-8518-ce12ca14d3c9" >
+		<salesforce:basic-connection username="${sf.user}" password="${sf.password}" securityToken="${sf.token}" />
+	</salesforce:sfdc-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="4b299940-1740-4fef-831d-d7f058caf7cd" file="config\app-salesforce.properties" />
+	<flow name="GET-yum-implFlow" doc:id="55d2090c-0487-48e3-898b-844373daefe4" >
+		<db:select doc:name="Select" doc:id="0a810957-36f0-445e-8c73-6f3aa685e35b" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from Yum]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="b8b9adc8-b041-4eaa-931c-a88b2558b98b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="end-get-Logger" doc:id="96153719-00e1-4792-8167-722988d3c4db" message="GET-ALL-Exution-end the flow"/>
+	</flow>
+	<flow name="POST-yum-implFlow" doc:id="47e713be-420c-40a8-8999-2c795cf45ec3" >
+		<ee:transform doc:name="Transform Message" doc:id="6464c58e-4ef8-470d-a0cc-ae4734e33044" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[{
+	sys_id__c: payload.sys_id,
+	u_product__c: payload.u_product,
+	u_request_note__c: payload.u_request_note,
+	u_vendor_closed__c: payload.u_vendor_closed,
+	u_vendor_resolution__c: payload.u_vendor_resolution,
+	u_vendor_status__c: payload.u_vendor_status,
+	u_platform__c: payload.u_platform
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create type="yum__c" doc:name="Create" doc:id="381b30f3-47d4-4787-8216-0e2d8bdd4d5b" config-ref="Salesforce_Config"/>
+		<ee:transform doc:name="Transform Message" doc:id="77d64aff-858a-49b2-b5fe-adb18bcb7c34" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json skipNullOn="objects"
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="end-Logger" doc:id="87c31ba3-abed-4dcb-8df3-138ddeb3a060" message="create new Exuction &amp; end the excution of the this flow"/>
+	</flow>
+</mule>

@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="singleYum" format="json">
+      <types:shape format="weave" example="examples/singleYum.json"><![CDATA[%dw 2.0
+
+type singleYum = Array<{|  sys_id: Number {"typeId": "int"},   u_product: String,   u_request_note: String,   u_vendor_closed: String,   u_vendor_resolution: String,   u_vendor_status: String,   u_platform: String|}> {"example": "[{\\\"sys_id\\\":1,\\\"u_product\\\":\\\"Sugar\\\",\\\"u_request_note\\\":\\\"CE IS NOW US539H\\\",\\\"u_vendor_closed\\\":\\\"Sugar\\\",\\\"u_vendor_resolution\\\":\\\"Sugar\\\",\\\"u_vendor_status\\\":\\\"REMARK_ADDED\\\",\\\"u_platform\\\":\\\"Sugar\\\"},{\\\"sys_id\\\":2,\\\"u_product\\\":\\\"vegetables\\\",\\\"u_request_note\\\":\\\"vegetables\\\",\\\"u_vendor_closed\\\":\\\"vegetables\\\",\\\"u_vendor_resolution\\\":\\\"vegetables\\\",\\\"u_vendor_status\\\":\\\"vegetables\\\",\\\"u_platform\\\":\\\"vegetables\\\"},{\\\"sys_id\\\":3,\\\"u_product\\\":\\\"fruit\\\",\\\"u_request_note\\\":\\\"fruit\\\",\\\"u_vendor_closed\\\":\\\"fruit\\\",\\\"u_vendor_resolution\\\":\\\"fruit\\\",\\\"u_vendor_status\\\":\\\"fruit\\\",\\\"u_platform\\\":\\\"fruit\\\"},{\\\"sys_id\\\":4,\\\"u_product\\\":\\\"fish\\\",\\\"u_request_note\\\":\\\"fish\\\",\\\"u_vendor_closed\\\":\\\"fish\\\",\\\"u_vendor_resolution\\\":\\\"fish\\\",\\\"u_vendor_status\\\":\\\"fish\\\",\\\"u_platform\\\":\\\"fish\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#d3c13f04-1824-4d08-bb74-a91d1cf5c514">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="singleYum"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="singleYum"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#6464c58e-4ef8-470d-a0cc-ae4734e33044"/>
+</types:mule>

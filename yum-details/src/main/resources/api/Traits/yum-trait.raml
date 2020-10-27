@@ -1,0 +1,52 @@
+#%RAML 1.0 Trait
+responses:
+  400:
+    body:
+      application/json:
+        example:
+         message: bag request
+  401:
+    body:
+      application/json:
+        example:
+          message: unauthorized
+  403:
+    body:
+      application/json:
+        example:
+          message: forbidden
+  404:
+    body:
+      application/json:
+        example:
+          message: Not Found
+  405:
+    body:
+      application/json:
+        example:
+          message: method not allowed
+  408:
+    body:
+      application/json:
+        example:
+          message: Request Time Out
+  500:
+    body:
+      application/json:
+        example:
+          message: internal server error
+  501:
+    body:
+      application/json:
+        example:
+          message: Not implemented
+  502:
+    body:
+      application/json:
+        example:
+          message: Bad GeatWay
+  504:
+    body:
+      application/json:
+        example:
+          message: Gateway Timeout

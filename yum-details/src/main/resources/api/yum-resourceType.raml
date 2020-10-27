@@ -1,0 +1,30 @@
+#%RAML 1.0 ResourceType
+  get:
+    headers:
+      Accept: string
+    queryParameters:
+      u_platform:
+        type: string
+        required: true
+        enum:
+          - MCA
+          - MBA
+    responses:
+      200:
+        body:
+          application/json:
+            type: YumDataType[]
+            examples: !include Example/Mule-example.raml
+  post:
+    headers:
+      Accept: string
+    body:
+      application/json:
+        type: YumDataType
+        example: !include Example/WithOut-Id-example.raml
+    responses:
+      201:
+        body:
+          application/json:
+            example:
+              message: data was created(but not really)

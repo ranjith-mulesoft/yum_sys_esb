@@ -1,0 +1,48 @@
+#%RAML 1.0
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/c672388e-780f-4528-8823-520b079ddd07/ # 
+title: Yum-Details
+types:
+  YumDataType: !include DataType/Yum-dataType.raml
+traits:
+  YumTraits: !include Traits/yum-trait.raml
+resourceTypes:
+  YumPresources: !include yum-resourceType.raml
+
+/Yum:
+  type: YumPresources
+  is: [YumTraits]
+
+  /{id}:
+    is: [YumTraits]
+    get:
+      headers:
+        Accept: string
+      responses:
+        200:
+          body:
+            application/json:
+              type: YumDataType
+              example: !include Example/With-Id-example.raml
+    put:
+      headers:
+        Accept: string
+      body:
+        application/json:
+          type: YumDataType
+          example: !include Example/WithOut-Id-example.raml
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                message: data was updated(but not really)
+    delete:
+      headers:
+        Accept: string
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                message: data was deleted(but not really)
+      
