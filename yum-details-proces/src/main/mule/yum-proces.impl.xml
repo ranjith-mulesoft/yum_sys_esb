@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:request-config name="HTTP_Proces_Request_configuration" doc:name="HTTP Request configuration" doc:id="469766db-2030-4a0a-8696-78803850b687">
+		<http:request-connection host="localhost" port="8081" />
+	</http:request-config>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="c0f66d46-ceb9-4fc9-b722-1596b2d68dd2" >
+		<http:listener-connection host="0.0.0.0" port="8082" />
+	</http:listener-config>
+	<flow name="GET-yum-proces.implFlow" doc:id="b9884c74-59e3-4bbf-a191-998506cb7e85" >
+		<http:listener doc:name="Listener" doc:id="c8f8cfa3-5451-49ef-b80d-162051c83523" config-ref="HTTP_Listener_config" path="/tt"/>
+		<http:request method="GET" doc:name="Request" doc:id="652c9f80-4066-4a42-b064-f891b05f8140" config-ref="HTTP_Proces_Request_configuration" path="/api/Yum">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"u_platform" : "MCA"
+}]]]></http:query-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="55e6b2de-ea3c-43a6-b119-07340fd0deff" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="POST-yum-proces.implFlow1" doc:id="97632229-bd28-4b56-971b-8b5dbc42eabe" >
+		<http:listener doc:name="Listener" doc:id="792750c8-f834-479b-bf06-060981ab5bc7" config-ref="HTTP_Listener_config" path="/ttt"/>
+		<http:request method="POST" doc:name="Request" doc:id="5270f5e5-4e2a-4e39-9823-5ec7990a6c35" config-ref="HTTP_Proces_Request_configuration" path="/api/Yum"/>
+		<ee:transform doc:name="Transform Message" doc:id="a39034ab-8e06-48bf-84bc-794f1c22c8db" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
